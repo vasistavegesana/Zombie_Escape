@@ -27,7 +27,7 @@ Press P at any time to save a clean prototype screenshot for the presentation.
 2. Open `Assets/Scenes/ZombieEscapePrototype.unity`.
 3. Press Play.
 
-The project also includes `Builds/Mac/Zombie Escape.app` when the included build step succeeds.
+Generated builds and Unity cache folders are intentionally excluded from the repository. The checked-in source has been verified with a successful macOS build.
 
 ## Main source files
 
