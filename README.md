@@ -1,6 +1,6 @@
 # Zombie Escape
 
-This Unity project is a playable top-down survival game built with original, code-generated visuals. It includes a polished main menu, three selectable character classes, two complete levels, combat, pickups, a three-hit health system, and full win/lose flow.
+This Unity project is a playable top-down survival game built with original visuals. It includes a polished main menu, illustrated top-down character and zombie sprites, three selectable character classes, two complete levels, combat, pickups, a three-hit health system, and full win/lose flow.
 
 ## Prototype loop
 
@@ -23,6 +23,7 @@ The player has three health units. Each completed zombie hit removes exactly one
 - Core mechanics: character selection, four-direction movement, pickups, inventory feedback, three-unit health, combat, locked areas, level progression, win condition, and lose condition.
 - Gameplay: a complete two-stage start-to-extraction loop with eight enemies, health packs, and optional supply pickups.
 - Presentation: custom tactical-horror menu, character stat cards, premium HUD, hit feedback, mission alerts, and polished result screens.
+- Original art: distinct Survivor, Scout, Guardian, and infected sprites plus a glowing security-keycard objective with an animated beacon.
 - AI explanation: the current zombies use a deliberately simple direct-chase placeholder. The final design adds A-star pathfinding for obstacle-aware routes and a six-state behavior machine: Idle, Wander, Detect, Chase, Attack, and Search.
 
 ## Open and run
@@ -42,6 +43,7 @@ Generated builds and Unity cache folders are intentionally excluded from the rep
 - `Pickup2D.cs`: keys, health packs, and supplies.
 - `LockedDoor2D.cs`: key-gated security door.
 - `ExitZone2D.cs`: validates the key and ends the run.
+- `Assets/Resources/Sprites`: original transparent character, enemy, and keycard art used by the runtime.
 
 ## Final AI architecture
 

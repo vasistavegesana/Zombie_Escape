@@ -8,6 +8,8 @@ namespace ZombieEscape
         [SerializeField] private PickupType pickupType;
         [SerializeField] private string itemId = "Item";
         [SerializeField] private int amount = 1;
+        private Vector3 baseScale;
+        private Vector3 basePosition;
 
         public void Configure(PickupType type, string id, int pickupAmount)
         {
@@ -19,11 +21,16 @@ namespace ZombieEscape
         private void Awake()
         {
             GetComponent<CircleCollider2D>().isTrigger = true;
+            baseScale = transform.localScale;
+            basePosition = transform.position;
         }
 
         private void Update()
         {
-            transform.Rotate(0f, 0f, 75f * Time.deltaTime);
+            float wave = (Mathf.Sin(Time.time * 3.8f) + 1f) * 0.5f;
+            transform.position = basePosition + Vector3.up * Mathf.Lerp(-0.06f, 0.1f, wave);
+            transform.localScale = baseScale * Mathf.Lerp(0.96f, 1.05f, wave);
+            transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(-4f, 4f, wave));
         }
 
         private void OnTriggerEnter2D(Collider2D other)

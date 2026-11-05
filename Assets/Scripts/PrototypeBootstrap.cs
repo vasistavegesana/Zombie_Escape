@@ -6,6 +6,11 @@ namespace ZombieEscape
     public class PrototypeBootstrap : MonoBehaviour
     {
         private Sprite squareSprite;
+        private Sprite survivorSprite;
+        private Sprite scoutSprite;
+        private Sprite guardianSprite;
+        private Sprite zombieSprite;
+        private Sprite keycardSprite;
         private GameObject levelRoot;
         private GameManager gameManager;
 
@@ -14,12 +19,35 @@ namespace ZombieEscape
             Application.targetFrameRate = 60;
             squareSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1),
                 new Vector2(0.5f, 0.5f), 1f);
+            LoadArtSprites();
 
             CreateCamera();
             gameManager = new GameObject("Game Manager").AddComponent<GameManager>();
             gameManager.Configure(this);
             BuildLevel(1);
             gameManager.PrepareMainMenu();
+        }
+
+        private void LoadArtSprites()
+        {
+            survivorSprite = LoadSprite("Sprites/player-survivor", 300f);
+            scoutSprite = LoadSprite("Sprites/player-scout", 300f);
+            guardianSprite = LoadSprite("Sprites/player-guardian", 300f);
+            zombieSprite = LoadSprite("Sprites/zombie-infected", 300f);
+            keycardSprite = LoadSprite("Sprites/security-keycard", 300f);
+        }
+
+        private Sprite LoadSprite(string resourcePath, float pixelsPerUnit)
+        {
+            Texture2D texture = Resources.Load<Texture2D>(resourcePath);
+            if (texture == null)
+            {
+                Debug.LogWarning($"Could not load game art at Resources/{resourcePath}.");
+                return null;
+            }
+
+            return Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height),
+                new Vector2(0.5f, 0.5f), pixelsPerUnit, 0, SpriteMeshType.Tight);
         }
 
         public void BuildLevel(int levelNumber)
@@ -96,7 +124,7 @@ namespace ZombieEscape
 
             CreateLabel("LEVEL 1  -  ABANDONED OFFICES", new Vector2(0f, 6.25f), new Color(0.35f, 0.9f, 0.92f), 30);
             CreateLabel("START", new Vector2(-10.5f, -5.9f), Color.cyan, 42);
-            CreateLabel("KEY", new Vector2(-9.2f, 5.7f), new Color(1f, 0.35f, 0.25f), 42);
+            CreateLabel("SECURITY KEYCARD", new Vector2(-9f, 4.45f), new Color(1f, 0.35f, 0.25f), 36);
             CreateLabel("LOCKED SECURITY DOOR", new Vector2(-3f, 1.1f), new Color(1f, 0.45f, 0.35f), 34);
             CreateLabel("EXIT", new Vector2(10.5f, 5.8f), new Color(0.35f, 1f, 0.45f), 42);
         }
@@ -105,7 +133,7 @@ namespace ZombieEscape
         {
             CreatePlayer(new Vector2(-10.5f, -5f));
             CreateDoor(new Vector2(-3f, 0f), new Vector2(0.65f, 2f));
-            CreatePickup("Security Key", new Vector2(-9.2f, 5f), PickupType.Key, "ExitKey", 1,
+            CreatePickup("Security Key", new Vector2(-9f, 3.7f), PickupType.Key, "ExitKey", 1,
                 new Color(1f, 0.17f, 0.12f));
             CreatePickup("Health Pack", new Vector2(-5f, -5.3f), PickupType.Health, "Health", 1,
                 new Color(0.18f, 1f, 0.35f));
@@ -138,7 +166,7 @@ namespace ZombieEscape
 
             CreateLabel("LEVEL 2  -  NIGHT LOADING BAY", new Vector2(0f, 6.25f), new Color(0.84f, 0.45f, 1f), 30);
             CreateLabel("START", new Vector2(-10.5f, 5.8f), new Color(0.65f, 0.4f, 1f), 42);
-            CreateLabel("KEY", new Vector2(-0.5f, -5.8f), new Color(1f, 0.35f, 0.25f), 42);
+            CreateLabel("SECURITY KEYCARD", new Vector2(-0.5f, -5.8f), new Color(1f, 0.35f, 0.25f), 36);
             CreateLabel("FINAL SECURITY DOOR", new Vector2(3f, 0.3f), new Color(1f, 0.45f, 0.35f), 32);
             CreateLabel("FINAL EXIT", new Vector2(10.5f, -5.8f), new Color(0.35f, 1f, 0.45f), 42);
         }
@@ -164,9 +192,10 @@ namespace ZombieEscape
 
         private void CreatePlayer(Vector2 position)
         {
-            GameObject player = CreateActor("Player", position, new Vector2(0.75f, 1f),
-                new Color(0.12f, 0.78f, 1f), 10);
+            GameObject player = CreateActor("Player", position, new Vector2(0.72f, 0.72f),
+                Color.white, 10, survivorSprite);
             PlayerController2D controller = player.AddComponent<PlayerController2D>();
+            controller.ConfigureArt(survivorSprite, scoutSprite, guardianSprite);
             if (gameManager != null)
             {
                 controller.ApplyCharacter(gameManager.SelectedCharacter);
@@ -189,24 +218,27 @@ namespace ZombieEscape
             exit.AddComponent<ExitZone2D>();
         }
 
-        private GameObject CreateVisual(string objectName, Vector2 position, Vector2 size, Color color, int order)
+        private GameObject CreateVisual(string objectName, Vector2 position, Vector2 size, Color color, int order,
+            Sprite spriteOverride = null)
         {
             GameObject created = new GameObject(objectName);
             created.transform.SetParent(levelRoot.transform);
             created.transform.position = position;
             created.transform.localScale = size;
             SpriteRenderer renderer = created.AddComponent<SpriteRenderer>();
-            renderer.sprite = squareSprite;
+            renderer.sprite = spriteOverride != null ? spriteOverride : squareSprite;
             renderer.color = color;
             renderer.sortingOrder = order;
             return created;
         }
 
-        private GameObject CreateActor(string objectName, Vector2 position, Vector2 size, Color color, int order)
+        private GameObject CreateActor(string objectName, Vector2 position, Vector2 size, Color color, int order,
+            Sprite actorSprite)
         {
-            GameObject actor = CreateVisual(objectName, position, size, color, order);
+            GameObject actor = CreateVisual(objectName, position, size, color, order, actorSprite);
             actor.AddComponent<Rigidbody2D>();
-            actor.AddComponent<CircleCollider2D>();
+            CircleCollider2D collider = actor.AddComponent<CircleCollider2D>();
+            collider.radius = actorSprite != null ? 0.48f : 0.5f;
             return actor;
         }
 
@@ -218,15 +250,29 @@ namespace ZombieEscape
 
         private void CreatePickup(string objectName, Vector2 position, PickupType type, string itemId, int amount, Color color)
         {
-            GameObject pickup = CreateVisual(objectName, position, new Vector2(0.55f, 0.55f), color, 8);
-            pickup.AddComponent<CircleCollider2D>();
+            bool isKey = type == PickupType.Key && keycardSprite != null;
+            Vector2 size = isKey ? new Vector2(0.95f, 0.95f) : new Vector2(0.55f, 0.55f);
+            GameObject pickup = CreateVisual(objectName, position, size, isKey ? Color.white : color, 8,
+                isKey ? keycardSprite : null);
+            CircleCollider2D collider = pickup.AddComponent<CircleCollider2D>();
+            collider.radius = isKey ? 0.7f : 0.5f;
             Pickup2D component = pickup.AddComponent<Pickup2D>();
             component.Configure(type, itemId, amount);
+
+            if (isKey)
+            {
+                GameObject beacon = CreateVisual("Keycard Beacon", position, new Vector2(2.2f, 0.08f),
+                    new Color(1f, 0.08f, 0.08f, 0.42f), 6);
+                KeycardBeacon pulse = beacon.AddComponent<KeycardBeacon>();
+                pulse.Configure(pickup.transform);
+            }
         }
 
         private void CreateZombie(string objectName, Vector2 position, float speed, Color color)
         {
-            GameObject zombie = CreateActor(objectName, position, new Vector2(0.82f, 1.05f), color, 9);
+            Color tint = zombieSprite != null ? Color.Lerp(Color.white, color, 0.12f) : color;
+            GameObject zombie = CreateActor(objectName, position, new Vector2(0.72f, 0.72f), tint, 9,
+                zombieSprite);
             ZombieController2D controller = zombie.AddComponent<ZombieController2D>();
             controller.Configure(speed);
             if (speed > 2.7f)

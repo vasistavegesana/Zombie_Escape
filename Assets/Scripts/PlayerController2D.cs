@@ -16,6 +16,9 @@ namespace ZombieEscape
         private Vector2 facing = Vector2.right;
         private Vector3 baseScale;
         private float nextAttackTime;
+        private Sprite survivorSprite;
+        private Sprite scoutSprite;
+        private Sprite guardianSprite;
 
         private void Awake()
         {
@@ -25,6 +28,13 @@ namespace ZombieEscape
             body.gravityScale = 0f;
             body.freezeRotation = true;
             body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        }
+
+        public void ConfigureArt(Sprite survivor, Sprite scout, Sprite guardian)
+        {
+            survivorSprite = survivor;
+            scoutSprite = scout;
+            guardianSprite = guardian;
         }
 
         public void ApplyCharacter(CharacterType characterType)
@@ -37,18 +47,21 @@ namespace ZombieEscape
                     moveSpeed = 6.8f;
                     attackRadius = 0.65f;
                     transform.localScale = new Vector3(baseScale.x * 0.78f, baseScale.y * 1.08f, 1f);
-                    spriteRenderer.color = new Color(0.68f, 0.32f, 1f);
+                    spriteRenderer.sprite = scoutSprite != null ? scoutSprite : survivorSprite;
+                    spriteRenderer.color = Color.white;
                     break;
                 case CharacterType.Guardian:
                     moveSpeed = 4.8f;
                     attackRadius = 1.05f;
                     transform.localScale = new Vector3(baseScale.x * 1.25f, baseScale.y * 1.05f, 1f);
-                    spriteRenderer.color = new Color(1f, 0.55f, 0.16f);
+                    spriteRenderer.sprite = guardianSprite != null ? guardianSprite : survivorSprite;
+                    spriteRenderer.color = Color.white;
                     break;
                 default:
                     moveSpeed = 5.5f;
                     attackRadius = 0.75f;
-                    spriteRenderer.color = new Color(0.12f, 0.78f, 1f);
+                    spriteRenderer.sprite = survivorSprite != null ? survivorSprite : spriteRenderer.sprite;
+                    spriteRenderer.color = Color.white;
                     break;
             }
         }
