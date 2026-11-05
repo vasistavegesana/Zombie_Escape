@@ -358,6 +358,11 @@ namespace ZombieEscape
         {
             Color accent = currentLevel == 1 ? new Color(0.18f, 0.94f, 0.86f) : new Color(0.78f, 0.42f, 1f);
 
+            // Matches the camera's reserved viewport margin. This solid command
+            // strip makes the HUD feel intentional and keeps gameplay fully clear.
+            FillRect(new Rect(0, 0, 1280, 151), new Color(0.008f, 0.016f, 0.021f, 1f));
+            FillRect(new Rect(0, 149, 1280, 2), new Color(accent.r, accent.g, accent.b, 0.5f));
+
             if (Time.unscaledTime < damageFlashUntil)
             {
                 FillRect(new Rect(0, 0, 1280, 720), new Color(0.8f, 0.015f, 0.025f, 0.25f));

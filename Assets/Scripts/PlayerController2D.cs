@@ -13,7 +13,8 @@ namespace ZombieEscape
         private Rigidbody2D body;
         private SpriteRenderer spriteRenderer;
         private Vector2 movement;
-        private Vector2 facing = Vector2.right;
+        // The illustrated sprites are drawn facing toward the bottom of their image.
+        private Vector2 facing = Vector2.down;
         private Vector3 baseScale;
         private float nextAttackTime;
         private Sprite survivorSprite;
@@ -80,7 +81,7 @@ namespace ZombieEscape
             if (movement.sqrMagnitude > 0.01f)
             {
                 facing = movement.normalized;
-                transform.up = facing;
+                transform.up = -facing;
             }
 
             if (Input.GetKeyDown(KeyCode.Space) && Time.time >= nextAttackTime)

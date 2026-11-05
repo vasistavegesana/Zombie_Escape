@@ -81,6 +81,10 @@ namespace ZombieEscape
             cameraObject.transform.position = new Vector3(0f, 0f, -10f);
             gameCamera.orthographic = true;
             gameCamera.orthographicSize = 8.2f;
+            // Reserve the upper 21% of the window exclusively for the HUD. The
+            // world renders below it, so health and objective panels never hide
+            // any floor, enemies, pickups, or walkable space.
+            gameCamera.rect = new Rect(0f, 0f, 1f, 0.79f);
             gameCamera.backgroundColor = new Color(0.012f, 0.018f, 0.028f);
             gameCamera.clearFlags = CameraClearFlags.SolidColor;
         }

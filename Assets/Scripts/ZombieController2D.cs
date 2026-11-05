@@ -53,7 +53,9 @@ namespace ZombieEscape
             {
                 Vector2 step = offset.normalized * moveSpeed * Time.fixedDeltaTime;
                 body.MovePosition(body.position + step);
-                transform.up = offset.normalized;
+                // Sprite artwork faces down in local space, so point local down
+                // toward the chase target to keep the infected facing its motion.
+                transform.up = -offset.normalized;
             }
 
             if (distance <= attackRange)
