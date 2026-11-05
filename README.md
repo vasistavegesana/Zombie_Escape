@@ -1,24 +1,28 @@
-# Zombie Escape Prototype
+# Zombie Escape
 
-This Unity project implements Deliverable 2 from the Zombie Escape game proposal. It is a playable top-down survival demo built with original, code-generated visuals so every required mechanic can be reproduced without third-party assets.
+This Unity project is a playable top-down survival game built with original, code-generated visuals. It includes a polished main menu, three selectable character classes, two complete levels, combat, pickups, a three-hit health system, and full win/lose flow.
 
 ## Prototype loop
 
-1. Explore the abandoned building with WASD or the arrow keys.
-2. Collect the red security key on the west side of the building.
-3. Fight or avoid zombies with the Space key.
-4. Pick up health packs and supplies.
-5. Use the security key to open the red center door.
-6. Reach the green exit zone on the east side to win.
+1. Choose Survivor, Scout, or Guardian from the main menu.
+2. Explore the abandoned offices with WASD or the arrow keys.
+3. Collect the red security key, fight or avoid zombies with Space, and reach the exit.
+4. Survive the more dangerous night loading bay and reach the final extraction zone.
 
-If the player's health reaches zero, the run is lost. Press R after a win or loss to restart.
-Press P at any time to save a clean prototype screenshot for the presentation.
+The player has three health units. Each completed zombie hit removes exactly one unit; losing all three ends the run. Health packs restore one unit. Press R after a win or loss to return to the menu, or P during play to save a screenshot.
+
+## Character classes
+
+- Survivor: balanced movement speed and attack range.
+- Scout: fastest movement with a more precise attack.
+- Guardian: slower movement with the widest attack range.
 
 ## Rubric coverage
 
-- Game environment: two connected rooms, walls, hallways, furniture obstacles, signs, a locked security passage, and an exit.
-- Core mechanics: four-direction movement, pickups, inventory feedback, health, combat, locked areas, win condition, and lose condition.
-- Limited gameplay: a complete start-to-escape loop with three enemies and optional supply pickups.
+- Game environment: two distinct levels with walls, hallways, office furniture, cargo obstacles, signage, locked security passages, and exits.
+- Core mechanics: character selection, four-direction movement, pickups, inventory feedback, three-unit health, combat, locked areas, level progression, win condition, and lose condition.
+- Gameplay: a complete two-stage start-to-extraction loop with eight enemies, health packs, and optional supply pickups.
+- Presentation: custom tactical-horror menu, character stat cards, premium HUD, hit feedback, mission alerts, and polished result screens.
 - AI explanation: the current zombies use a deliberately simple direct-chase placeholder. The final design adds A-star pathfinding for obstacle-aware routes and a six-state behavior machine: Idle, Wander, Detect, Chase, Attack, and Search.
 
 ## Open and run
@@ -34,7 +38,7 @@ Generated builds and Unity cache folders are intentionally excluded from the rep
 - `PrototypeBootstrap.cs`: generates the playable environment and game objects.
 - `PlayerController2D.cs`: movement, facing, and melee combat.
 - `ZombieController2D.cs`: temporary chase and attack behavior.
-- `GameManager.cs`: health, inventory, HUD, feedback, and win or lose state.
+- `GameManager.cs`: menu, character selection, level flow, health, inventory, premium HUD, feedback, and result screens.
 - `Pickup2D.cs`: keys, health packs, and supplies.
 - `LockedDoor2D.cs`: key-gated security door.
 - `ExitZone2D.cs`: validates the key and ends the run.

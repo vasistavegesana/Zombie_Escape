@@ -11,21 +11,51 @@ namespace ZombieEscape
         [SerializeField] private float attackCooldown = 0.35f;
 
         private Rigidbody2D body;
+        private SpriteRenderer spriteRenderer;
         private Vector2 movement;
         private Vector2 facing = Vector2.right;
+        private Vector3 baseScale;
         private float nextAttackTime;
 
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            baseScale = transform.localScale;
             body.gravityScale = 0f;
             body.freezeRotation = true;
             body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         }
 
+        public void ApplyCharacter(CharacterType characterType)
+        {
+            transform.localScale = baseScale;
+
+            switch (characterType)
+            {
+                case CharacterType.Scout:
+                    moveSpeed = 6.8f;
+                    attackRadius = 0.65f;
+                    transform.localScale = new Vector3(baseScale.x * 0.78f, baseScale.y * 1.08f, 1f);
+                    spriteRenderer.color = new Color(0.68f, 0.32f, 1f);
+                    break;
+                case CharacterType.Guardian:
+                    moveSpeed = 4.8f;
+                    attackRadius = 1.05f;
+                    transform.localScale = new Vector3(baseScale.x * 1.25f, baseScale.y * 1.05f, 1f);
+                    spriteRenderer.color = new Color(1f, 0.55f, 0.16f);
+                    break;
+                default:
+                    moveSpeed = 5.5f;
+                    attackRadius = 0.75f;
+                    spriteRenderer.color = new Color(0.12f, 0.78f, 1f);
+                    break;
+            }
+        }
+
         private void Update()
         {
-            if (GameManager.Instance == null || GameManager.Instance.IsGameOver)
+            if (GameManager.Instance == null || !GameManager.Instance.IsGameplayActive)
             {
                 movement = Vector2.zero;
                 return;

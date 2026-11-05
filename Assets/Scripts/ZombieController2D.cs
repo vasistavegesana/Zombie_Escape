@@ -7,7 +7,7 @@ namespace ZombieEscape
     {
         [SerializeField] private float chaseRange = 7f;
         [SerializeField] private float moveSpeed = 2.25f;
-        [SerializeField] private float attackRange = 0.8f;
+        [SerializeField] private float attackRange = 1.15f;
         [SerializeField] private float attackCooldown = 1.1f;
         [SerializeField] private int health = 3;
 
@@ -39,7 +39,7 @@ namespace ZombieEscape
 
         private void FixedUpdate()
         {
-            if (player == null || GameManager.Instance == null || GameManager.Instance.IsGameOver)
+            if (player == null || GameManager.Instance == null || !GameManager.Instance.IsGameplayActive)
             {
                 return;
             }
@@ -56,11 +56,29 @@ namespace ZombieEscape
                 transform.up = offset.normalized;
             }
 
-            if (distance <= attackRange && Time.time >= nextAttackTime)
+            if (distance <= attackRange)
             {
-                nextAttackTime = Time.time + attackCooldown;
-                GameManager.Instance.DamagePlayer(1);
+                TryAttackPlayer();
             }
+        }
+
+        private void OnCollisionStay2D(Collision2D collision)
+        {
+            if (collision.collider.GetComponent<PlayerController2D>() != null)
+            {
+                TryAttackPlayer();
+            }
+        }
+
+        private void TryAttackPlayer()
+        {
+            if (GameManager.Instance == null || !GameManager.Instance.IsGameplayActive || Time.time < nextAttackTime)
+            {
+                return;
+            }
+
+            nextAttackTime = Time.time + attackCooldown;
+            GameManager.Instance.DamagePlayer(1);
         }
 
         public void TakeDamage(int amount)

@@ -21,7 +21,7 @@ namespace ZombieEscape
 
             if (GameManager.Instance.HasKey(requiredKey))
             {
-                GameManager.Instance.Win();
+                GameManager.Instance.ReachExit();
             }
             else
             {
