@@ -32,7 +32,7 @@ The player has three health units. Each completed zombie hit removes exactly one
 2. Open `Assets/Scenes/ZombieEscapePrototype.unity`.
 3. Press Play.
 
-Generated builds and Unity cache folders are intentionally excluded from the repository. The checked-in source has been verified with a successful macOS build.
+The ready-to-run macOS app is included as `Releases/Zombie-Escape-macOS.zip`. Extract it and open `Zombie Escape.app` to play without installing Unity. Unity cache, log, and per-user settings folders are intentionally excluded because Unity regenerates them automatically. The checked-in source and packaged app have both been verified with a successful macOS build.
 
 ## Main source files
 
